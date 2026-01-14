@@ -1,0 +1,29 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<linearGradient id="paint0_linear_arc" x1="114.5" y1="390" x2="370" y2="140" gradientUnits="userSpaceOnUse">
+<stop stop-color="#4DB6AC"/>
+<stop offset="1" stop-color="#FF7043"/>
+</linearGradient>
+<filter id="filter0_d_star" x="310" y="90" width="130" height="130" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset/>
+<feGaussianBlur stdDeviation="5"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 0.439216 0 0 0 0 0.262745 0 0 0 0.5 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"/>
+</filter>
+</defs>
+
+<circle cx="114.5" cy="389.5" r="18.5" fill="#4DB6AC"/>
+
+<path d="M115 390C160 385 260 350 340 180L365 200C280 390 165 410 115 390Z" fill="url(#paint0_linear_arc)"/>
+
+<path d="M335 240C345 210 360 190 370 180" stroke="#FF7043" stroke-width="4" stroke-linecap="round" opacity="0.6"/>
+<path d="M365 265C375 235 385 215 395 205" stroke="#FF7043" stroke-width="4" stroke-linecap="round" opacity="0.6"/>
+
+<g filter="url(#filter0_d_star)">
+<path d="M375.5 130L388.7 158.8L420 163.1L397 184.7L402.8 216L375.5 200.8L348.2 216L354 184.7L331 163.1L362.3 158.8L375.5 130Z" fill="#FF7043"/>
+</g>
+</svg>

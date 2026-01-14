@@ -1,0 +1,99 @@
+{
+  "sidebar": {
+    "title": "TinyLeap",
+    "mode": "绘图桌模式",
+    "brainstorm": "头脑风暴",
+    "vision": "核心愿望",
+    "visionPlaceholder": "输入你想要实现的愿望...",
+    "magicBrainstorm": "AI 灵感爆发",
+    "currentVision": "当前核心愿望",
+    "placeholder": "输入一个行为...",
+    "workflow": "操作指南",
+    "steps": {
+      "1": {
+        "title": "确立愿望",
+        "desc": "输入你想要实现的愿望，这是所有行为设计的起点。"
+      },
+      "2": {
+        "title": "行为风暴",
+        "desc": "手动添加或利用 AI 灵感爆发，将可能的行为平铺在画布上。"
+      },
+      "3": {
+        "title": "AI 深度测评",
+        "desc": "点击评估图标，通过 AI 对话修正影响力与可行性的认知偏差。"
+      },
+      "4": {
+        "title": "建立 SOP",
+        "desc": "针对筛选出的“黄金行为”或“核心挑战”一键生成可落地的执行方案。"
+      }
+    },
+    "export": "建立 SOP",
+    "viewSOP": "查看已建立的 SOP",
+    "reGenerateSOP": "重新生成 SOP",
+    "noBehaviorsForSOP": "没有找到处于“黄金行为”或“核心挑战”区域的行为。请先评估或移动行为到上方区域。",
+    "clear": "清除数据",
+    "clearConfirm": "确定要清空画布吗？此操作不可撤销。"
+  },
+  "canvas": {
+    "impact": "影响力 (IMPACT)",
+    "ability": "可行性 (ABILITY)",
+    "extremes": {
+      "low": "对于愿望没有效果",
+      "high": "对于愿望很有效果",
+      "easy": "我能够让自己完成这个行为",
+      "hard": "我无法让自己做到这个行为"
+    },
+    "quadrants": {
+      "golden": "黄金行为",
+      "quickWins": "快速制胜",
+      "lowPriority": "低优先级",
+      "challenge": "核心挑战"
+    }
+  },
+  "wizard": {
+    "title": "理性测评实验室",
+    "expertTitle": "AI 专家评价",
+    "assessmentTitle": "AI 深度评测",
+    "analyzing": "AI 专家正在诊断行为...",
+    "notABehavior": "诊断结果：非具体行为",
+    "behaviorValid": "行为判定通过",
+    "aiSummary": "深度评测结论",
+    "confirmAndGenerate": "确认并生成评估点位",
+    "regenerate": "重新生成评估",
+    "chatPlaceholder": "回答 AI 的问题...",
+    "questionsCount": "个问题",
+    "usePreliminaryScore": "直接采用专家预估分",
+    "aiSourceWelcome": "我是你的行为设计教练。这个行为是由 AI 灵感爆发生成的，已经过初步筛选。让我们开始深度评测，看看它是否真的适合你。",
+    "aiExpertOpinion": "AI 专家评估结论",
+    "preliminaryScores": "专家预估分值",
+    "impact": "影响力 (Impact)",
+    "ability": "可行性 (Ability)",
+    "startAnalysis": "进入 AI 深度评测",
+    "reAnalyze": "重新开始评测",
+    "evaluationTitle": "行为诊断报告",
+    "actionable": "动作性",
+    "specific": "清晰度",
+    "tiny": "微小度",
+    "relevance": "关联度",
+    "chart": {
+      "userTitle": "你的直觉估值",
+      "aiTitle": "AI 深度修正",
+      "impact": "影响力",
+      "ability": "可行性"
+    }
+  },
+  "note": {
+    "evaluate": "评估",
+    "delete": "删除"
+  },
+  "sop": {
+    "overview": "概述",
+    "goldenBadge": "黄金行为",
+    "challengeBadge": "核心挑战",
+    "actionSteps": "执行步骤",
+    "proTips": "专业贴士",
+    "motivationHack": "动力锦囊",
+    "print": "导出 PDF 方案",
+    "close": "知道了"
+  }
+}
