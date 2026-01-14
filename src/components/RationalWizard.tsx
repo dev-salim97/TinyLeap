@@ -4,7 +4,7 @@ import { X, BrainCircuit, CheckCircle2, AlertCircle, Loader2, Send, RotateCcw, T
 import { clsx } from 'clsx';
 import { checkIsBehavior } from '../services/agents/validator';
 import { getNextQuestion, getFinalEvaluation } from '../services/agents/coach';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import ReactMarkdown from 'react-markdown';
 
@@ -179,7 +179,7 @@ const RationalWizard: React.FC<RationalWizardProps> = ({ behavior, onClose, onUp
         });
       } else {
         setStep('summary');
-        const { summary, score } = await getFinalEvaluation(behavior.text, vision, updatedHistory, (chunk) => {
+        const { summary, score } = await getFinalEvaluation(behavior.text, vision, updatedHistory, () => {
           // 总结阶段也可以流式显示，但因为是 JSON，建议只流式显示 summary 字段
           // 这里为了简单，先保持 summary 整体更新，只在最终拿到结果后显示
         }, i18n.language);

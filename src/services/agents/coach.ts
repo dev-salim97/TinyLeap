@@ -60,7 +60,7 @@ export async function getFinalEvaluation(
   behavior: string, 
   vision: string, 
   history: AiChatEntry[],
-  onChunk?: (chunk: string) => void,
+  _onChunk?: (chunk: string) => void,
   language: string = 'zh'
 ): Promise<{ summary: string; score: RationalScore }> {
   try {

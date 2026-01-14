@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import type { AppState, Behavior, Position, RationalScore, FoggFactors } from './types';
+import type { AppState, Behavior, Position, RationalScore, AiEvaluation } from './types';
 import Canvas from './components/Canvas';
 import Sidebar from './components/Sidebar';
 import RationalWizard from './components/RationalWizard';
@@ -57,7 +57,7 @@ const App: React.FC = () => {
       ...prev,
       behaviors: [
         ...prev.behaviors,
-        ...generatedBehaviors.map(gb => ({
+        ...generatedBehaviors.map((gb): Behavior => ({
           id: uuidv4(),
           text: gb.text,
           color: COLOR_KEYS[Math.floor(Math.random() * COLOR_KEYS.length)],

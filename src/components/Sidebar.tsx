@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Plus, Trash2, ClipboardCheck, Languages, X, Star, Sparkles, Loader2, Eye, RefreshCw } from 'lucide-react';
-import html2canvas from 'html2canvas';
 import { useTranslation } from 'react-i18next';
 import { generateBehaviors } from '../services/agents/designer';
 import type { SOPData, Behavior } from '../types';
@@ -80,20 +79,6 @@ const Sidebar: React.FC<SidebarProps> = ({
       if (window.innerWidth < 1024) {
         onClose();
       }
-    }
-  };
-
-  const handleExport = async () => {
-    const canvas = document.getElementById('workshop-canvas');
-    if (canvas) {
-      const canvasImage = await html2canvas(canvas, {
-        backgroundColor: '#f8fafc',
-        scale: 2,
-      });
-      const link = document.createElement('a');
-      link.download = `Golden-Behaviors-${new Date().toISOString().split('T')[0]}.png`;
-      link.href = canvasImage.toDataURL();
-      link.click();
     }
   };
 

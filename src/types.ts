@@ -36,6 +36,7 @@ export interface AiEvaluation {
   chatHistory: AiChatEntry[];
   finalSummary?: string;
   isComplete: boolean;
+  rationalScore?: RationalScore;
 }
 
 export interface Behavior {

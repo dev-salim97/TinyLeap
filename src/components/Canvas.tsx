@@ -25,7 +25,6 @@ const Canvas: React.FC<CanvasProps> = ({
 }) => {
   const canvasRef = useRef<HTMLDivElement>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-  const [draggingId, setDraggingId] = useState<string | null>(null);
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -44,7 +43,6 @@ const Canvas: React.FC<CanvasProps> = ({
   }, []);
 
   const handleDragEnd = (id: string, x: number, y: number) => {
-    setDraggingId(null);
     if (!canvasRef.current) return;
     
     // Map pixels to 0-100
@@ -147,7 +145,7 @@ const Canvas: React.FC<CanvasProps> = ({
           behavior={behavior}
           canvasDimensions={dimensions}
           canvasRef={canvasRef}
-          onDragStart={() => setDraggingId(behavior.id)}
+          onDragStart={() => {}}
           onDragEnd={(x, y) => handleDragEnd(behavior.id, x, y)}
           onUpdateText={(text) => onUpdateText(behavior.id, text)}
           onEvaluate={() => onEvaluate(behavior.id)}

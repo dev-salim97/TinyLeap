@@ -14,7 +14,7 @@ function cn(...inputs: ClassValue[]) {
 interface StickyNoteProps {
   behavior: Behavior;
   canvasDimensions: { width: number; height: number };
-  canvasRef: React.RefObject<HTMLDivElement>;
+  canvasRef: React.RefObject<HTMLDivElement | null>;
   onDragStart: () => void;
   onDragEnd: (x: number, y: number) => void;
   onUpdateText: (text: string) => void;

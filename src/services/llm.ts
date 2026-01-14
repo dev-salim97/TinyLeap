@@ -26,7 +26,7 @@ export const model = new ChatOpenAI({
 /**
  * 基础调用函数（保留用于兼容）
  */
-export async function callLLM(messages: any, jsonMode: boolean = false) {
+export async function callLLM(_messages: any, _jsonMode: boolean = false) {
   console.warn('callLLM is deprecated, please use LangChain instances instead.');
   return null;
 }
