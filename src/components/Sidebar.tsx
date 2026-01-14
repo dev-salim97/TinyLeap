@@ -98,7 +98,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         <div className="mb-10 flex justify-between items-start">
           <div>
             <h1 className="text-xl font-black text-slate-800 flex items-center gap-2 tracking-tighter">
-              <img src="/icon.svg" alt="Logo" className="w-8 h-8" />
+              <img src="icon.svg" alt="Logo" className="w-8 h-8" />
               {t('sidebar.title')}
             </h1>
             <p className="text-[10px] text-slate-400 mt-2 font-black tracking-[0.2em] uppercase">{t('sidebar.mode')}</p>
