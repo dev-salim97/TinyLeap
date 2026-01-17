@@ -1,39 +1,63 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import type { AppState, Behavior, Position, RationalScore, AiEvaluation } from './types';
 import Canvas from './components/Canvas';
 import Sidebar from './components/Sidebar';
 import RationalWizard from './components/RationalWizard';
 import SOPModal from './components/SOPModal';
-import { generateSOP } from './services/agents/sop';
+import { api } from './services/api';
 import { COLOR_KEYS } from './constants';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence } from 'framer-motion';
 
-const STORAGE_KEY = 'tinyleap_workshop_data';
+import VisionBookshelf from './components/VisionBookshelf';
 
 const App: React.FC = () => {
   const { t, i18n } = useTranslation();
-  const [state, setState] = useState<AppState>(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch (e) {
-        console.error('Failed to parse saved state', e);
-      }
-    }
-    return { behaviors: [] };
-  });
+  const [currentVisionId, setCurrentVisionId] = useState<string | null>(null);
+  const [state, setState] = useState<AppState>({ behaviors: [] });
 
   const [evaluatingId, setEvaluatingId] = useState<string | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [showSOP, setShowSOP] = useState(false);
   const [isGeneratingSOP, setIsGeneratingSOP] = useState(false);
 
+  // Load workshop when vision changes
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  }, [state]);
+    if (!currentVisionId) {
+      setState({ behaviors: [] });
+      return;
+    }
+
+    const loadWorkshop = async () => {
+      try {
+        const data = await api.getWorkshop(currentVisionId);
+        setState(data);
+      } catch (e) {
+        console.error('Failed to load workshop from server', e);
+      }
+    };
+    loadWorkshop();
+  }, [currentVisionId]);
+
+  // Save on state change
+  const isFirstRender = useRef(true);
+  useEffect(() => {
+    if (!currentVisionId || isFirstRender.current) {
+      if (currentVisionId) isFirstRender.current = false;
+      return;
+    }
+    const saveWorkshop = async () => {
+      try {
+        await api.saveWorkshop(currentVisionId, state);
+      } catch (e) {
+        console.error('Failed to save workshop to server', e);
+      }
+    };
+    
+    const timer = setTimeout(saveWorkshop, 1000);
+    return () => clearTimeout(timer);
+  }, [state, currentVisionId]);
 
   const addBehavior = useCallback((text: string) => {
     const newBehavior: Behavior = {
@@ -160,23 +184,27 @@ const App: React.FC = () => {
 
   const handleGenerateSOP = useCallback(async () => {
     const relevantBehaviors = state.behaviors
-      .filter(b => {
-        const impact = b.isEvaluated && b.rationalScore ? b.rationalScore.impact : b.intuitivePosition.y;
-        const ability = b.isEvaluated && b.rationalScore ? b.rationalScore.ability : b.intuitivePosition.x;
-        
-        const isGolden = impact >= 60 && ability >= 60;
-        const isChallenge = impact >= 60 && ability < 60;
-        return isGolden || isChallenge;
-      })
       .map(b => {
         const impact = b.isEvaluated && b.rationalScore ? b.rationalScore.impact : b.intuitivePosition.y;
         const ability = b.isEvaluated && b.rationalScore ? b.rationalScore.ability : b.intuitivePosition.x;
+        const isGolden = impact >= 60 && ability >= 60;
+        const isChallenge = impact >= 60 && ability < 60;
         
         return {
+          id: b.id,
           text: b.text,
-          type: (impact >= 60 && ability >= 60) ? 'golden' as const : 'challenge' as const
+          impact,
+          ability,
+          isRelevant: isGolden || isChallenge,
+          type: isGolden ? 'golden' as const : 'challenge' as const
         };
-      });
+      })
+      .filter(b => b.isRelevant)
+      .sort((a, b) => b.impact - a.impact) // Sort by impact descending
+      .map(b => ({
+        text: b.text,
+        type: b.type
+      }));
 
     if (relevantBehaviors.length === 0) {
       alert(t('sidebar.noBehaviorsForSOP') || '没有找到足够的黄金行为或核心挑战行为来生成 SOP');
@@ -185,7 +213,7 @@ const App: React.FC = () => {
 
     setIsGeneratingSOP(true);
     try {
-      const result = await generateSOP(state.vision || '', relevantBehaviors, i18n.language);
+      const result = await api.generateSOP(state.vision || '', relevantBehaviors as any, i18n.language);
       if (result) {
         setState(prev => ({ ...prev, sopData: result }));
         setShowSOP(true);
@@ -198,6 +226,10 @@ const App: React.FC = () => {
   }, [state.behaviors, state.vision, i18n.language, t]);
 
   const behaviorToEvaluate = state.behaviors.find(b => b.id === evaluatingId);
+
+  if (!currentVisionId) {
+    return <VisionBookshelf onSelectVision={setCurrentVisionId} />;
+  }
 
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-slate-50 relative">
@@ -214,6 +246,7 @@ const App: React.FC = () => {
         existingSOP={state.sopData}
         onViewSOP={() => setShowSOP(true)}
         behaviors={state.behaviors}
+        onBack={() => setCurrentVisionId(null)}
       />
       
       <main className="flex-1 relative overflow-hidden">

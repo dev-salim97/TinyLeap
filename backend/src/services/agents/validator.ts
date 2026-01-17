@@ -1,9 +1,9 @@
 // src/services/agents/validator.ts
 
 import { z } from 'zod';
-import { model } from '../llm';
+import { model } from '../llm.js';
 import { ChatPromptTemplate } from '@langchain/core/prompts';
-import type { AiEvaluation } from '../../types';
+import type { AiEvaluation } from '../../types.js';
 
 export async function checkIsBehavior(behavior: string, vision: string, language: string = 'zh'): Promise<{ 
   isBehavior: boolean; 
@@ -72,7 +72,7 @@ export async function checkIsBehavior(behavior: string, vision: string, language
       vision: vision
     });
 
-    return result;
+    return result as any;
   } catch (error) {
     console.error("LangChain: Failed to validate", error);
     return { 
@@ -87,13 +87,17 @@ export async function checkIsBehavior(behavior: string, vision: string, language
 export async function evaluateBehavior(behavior: string, vision: string, language: string = 'zh'): Promise<AiEvaluation> {
     try {
       const check = await checkIsBehavior(behavior, vision, language);
-      return {
+      const evaluation: AiEvaluation = {
         isBehavior: check.isBehavior,
         suggestion: check.suggestion,
-        scores: check.scores,
         chatHistory: [],
         isComplete: false
       };
+      
+      if (check.scores) evaluation.scores = check.scores;
+      if (check.rationalScore) evaluation.rationalScore = check.rationalScore;
+      
+      return evaluation;
     } catch (error) {
       console.error("Failed to evaluate behavior", error);
       return {

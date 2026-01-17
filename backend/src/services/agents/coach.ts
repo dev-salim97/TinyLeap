@@ -1,10 +1,10 @@
 // src/services/agents/coach.ts
 
 import { z } from 'zod';
-import { model } from '../llm';
+import { model } from '../llm.js';
 import { ChatPromptTemplate, MessagesPlaceholder } from '@langchain/core/prompts';
 import { HumanMessage, AIMessage } from '@langchain/core/messages';
-import type { AiChatEntry, RationalScore } from '../../types';
+import type { AiChatEntry, RationalScore } from '../../types.js';
 
 // 优化 1: 提问逻辑
 export async function getNextQuestion(
@@ -38,13 +38,13 @@ export async function getNextQuestion(
       behavior,
       vision,
       history: langHistory,
-      input: history.length > 0 ? history[history.length - 1].content : "",
+      input: history.length > 0 ? history[history.length - 1]!.content : "",
       validatorCritique: validatorCritique || ""
     });
 
     let fullText = "";
     for await (const chunk of stream) {
-      const content = chunk.content.toString();
+      const content = (chunk as any).content.toString();
       fullText += content;
       onChunk(content);
     }
@@ -115,7 +115,7 @@ export async function getFinalEvaluation(
       history: langHistory
     });
 
-    return result;
+    return result as any;
   } catch (error) {
     // Fallback
     return {

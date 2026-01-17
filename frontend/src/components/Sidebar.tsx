@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Plus, Trash2, ClipboardCheck, Languages, X, Star, Sparkles, Loader2, Eye, RefreshCw } from 'lucide-react';
+import { Plus, Trash2, ClipboardCheck, Languages, X, Star, Sparkles, Loader2, Eye, RefreshCw, ChevronLeft } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { generateBehaviors } from '../services/agents/designer';
+import { api } from '../services/api';
 import type { SOPData, Behavior } from '../types';
 
 interface SidebarProps {
@@ -17,6 +17,7 @@ interface SidebarProps {
   existingSOP?: SOPData;
   onViewSOP: () => void;
   behaviors: Behavior[];
+  onBack?: () => void;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ 
@@ -31,7 +32,8 @@ const Sidebar: React.FC<SidebarProps> = ({
   isGeneratingSOP,
   existingSOP,
   onViewSOP,
-  behaviors
+  behaviors,
+  onBack
 }) => {
   const [inputValue, setInputValue] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
@@ -43,7 +45,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     setIsGenerating(true);
     try {
       const existingTexts = behaviors.map(b => b.text);
-      const generated = await generateBehaviors(vision, i18n.language, existingTexts);
+      const generated = await api.generateBehaviors(vision, i18n.language, existingTexts);
       
       if (generated && generated.length > 0) {
         // 客户端过滤：确保生成的内容不在现有列表中
@@ -95,29 +97,40 @@ const Sidebar: React.FC<SidebarProps> = ({
       <aside className={`fixed lg:static inset-y-0 left-0 w-80 bg-white border-r border-black/5 flex flex-col p-8 shadow-2xl lg:shadow-sm z-50 transition-transform duration-300 transform ${
         isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
       }`}>
-        <div className="mb-10 flex justify-between items-start">
-          <div>
-            <h1 className="text-xl font-black text-slate-800 flex items-center gap-2 tracking-tighter">
-              <img src="icon.svg" alt="Logo" className="w-8 h-8" />
-              {t('sidebar.title')}
-            </h1>
-            <p className="text-[10px] text-slate-400 mt-2 font-black tracking-[0.2em] uppercase">{t('sidebar.mode')}</p>
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={toggleLanguage}
-              className="p-2 hover:bg-slate-50 rounded-lg text-slate-400 hover:text-amber-500 transition-all flex items-center gap-1"
-              title={i18n.language === 'zh' ? 'Switch to English' : '切换至中文'}
+        <div className="mb-10 flex flex-col gap-4">
+          {onBack && (
+            <button 
+              onClick={onBack}
+              className="flex items-center gap-1 text-slate-400 hover:text-slate-600 transition-colors text-sm font-medium w-fit"
             >
-              <Languages size={18} />
-              <span className="text-[10px] font-black uppercase">{i18n.language === 'zh' ? 'EN' : 'ZH'}</span>
+              <ChevronLeft className="w-4 h-4" />
+              {t('bookshelf.back')}
             </button>
-            <button
-              onClick={onClose}
-              className="p-2 hover:bg-slate-50 rounded-lg text-slate-400 lg:hidden"
-            >
-              <X size={20} />
-            </button>
+          )}
+          <div className="flex justify-between items-start">
+            <div>
+              <h1 className="text-xl font-black text-slate-800 flex items-center gap-2 tracking-tighter">
+                <img src="icon.svg" alt="Logo" className="w-8 h-8" />
+                {t('sidebar.title')}
+              </h1>
+              <p className="text-[10px] text-slate-400 mt-2 font-black tracking-[0.2em] uppercase">{t('sidebar.mode')}</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={toggleLanguage}
+                className="p-2 hover:bg-slate-50 rounded-lg text-slate-400 hover:text-amber-500 transition-all flex items-center gap-1"
+                title={i18n.language === 'zh' ? 'Switch to English' : '切换至中文'}
+              >
+                <Languages size={18} />
+                <span className="text-[10px] font-black uppercase">{i18n.language === 'zh' ? 'EN' : 'ZH'}</span>
+              </button>
+              <button
+                onClick={onClose}
+                className="p-2 hover:bg-slate-50 rounded-lg text-slate-400 lg:hidden"
+              >
+                <X size={20} />
+              </button>
+            </div>
           </div>
         </div>
 

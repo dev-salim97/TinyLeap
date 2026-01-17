@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { model } from '../llm';
+import { model } from '../llm.js';
 import { ChatPromptTemplate } from '@langchain/core/prompts';
 
 /**
@@ -36,12 +36,13 @@ export async function generateSOP(
 {vision}
 
 *** 编写原则 ***
-1. **可落地性**：步骤必须非常具体，让人看一眼就知道怎么做。
-2. **针对性**：
+1. **重要性优先**：用户提供的行为列表已经按照**影响力（重要性）从高到低**排序。请你在生成的 SOP 中严格保持这个顺序，先处理最重要的行为。
+2. **可落地性**：步骤必须非常具体，让人看一眼就知道怎么做。
+3. **针对性**：
    - 对于 **黄金行为 (Golden)**：重点在于如何将其“自动化”，利用习惯锚点（After I..., I will...）。
    - 对于 **核心挑战 (Challenge)**：重点在于如何“拆解”和“降低难度”，将其转化为更容易执行的版本。
-3. **语言风格**：使用 **${langName}**，语气专业、鼓励且简洁。
-4. **禁止事项**：在 "steps" 数组中，**禁止**在字符串开头手动添加数字编号（如 "1. "），因为 UI 会自动生成编号。直接输出步骤描述即可。
+4. **语言风格**：使用 **${langName}**，语气专业、鼓励且简洁。
+5. **禁止事项**：在 "steps" 数组中，**禁止**在字符串开头手动添加数字编号（如 "1. "），因为 UI 会自动生成编号。直接输出步骤描述即可。
 
 *** 格式要求 ***
 必须返回符合以下结构的 JSON 对象：
@@ -58,8 +59,8 @@ export async function generateSOP(
     }}
   ]
 }}`],
-      ["user", `请严格按照上述 JSON 格式，为以下行为建立 SOP：
-${behaviors.map(b => `- [${b.type === 'golden' ? '黄金行为' : '核心挑战'}] ${b.text}`).join('\n')}`]
+      ["user", `请严格按照上述 JSON 格式，为以下行为建立 SOP（已按重要性排序）：
+${behaviors.map((b, i) => `${i + 1}. [${b.type === 'golden' ? '黄金行为' : '核心挑战'}] ${b.text}`).join('\n')}`]
     ]);
 
     const result = await prompt.pipe(structuredModel).invoke({

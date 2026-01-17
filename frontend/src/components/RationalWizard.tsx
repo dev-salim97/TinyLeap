@@ -2,8 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import type { Behavior, RationalScore, AiEvaluation, AiChatEntry } from '../types';
 import { X, BrainCircuit, CheckCircle2, AlertCircle, Loader2, Send, RotateCcw, Target, Zap, Sparkles } from 'lucide-react';
 import { clsx } from 'clsx';
-import { checkIsBehavior } from '../services/agents/validator';
-import { getNextQuestion, getFinalEvaluation } from '../services/agents/coach';
+import { api } from '../services/api';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import ReactMarkdown from 'react-markdown';
@@ -60,7 +59,7 @@ const RationalWizard: React.FC<RationalWizardProps> = ({ behavior, onClose, onUp
   const performInitialCheck = async () => {
     setIsLoading(true);
     try {
-      const result = await checkIsBehavior(behavior.text, vision, i18n.language);
+      const result = await api.validateBehavior(behavior.text, vision, i18n.language);
       
       const newAiEval = {
         ...aiEval,
@@ -94,37 +93,22 @@ const RationalWizard: React.FC<RationalWizardProps> = ({ behavior, onClose, onUp
     
     setAiEval(prev => ({
       ...prev,
-      chatHistory: [...initialHistory, { role: 'ai', content: '' }]
+      chatHistory: [...initialHistory]
     }));
 
     try {
-      const firstQuestion = await getNextQuestion(
+      const response = await api.getNextQuestion(
         behavior.text, 
         vision, 
         initialHistory, 
-        (chunk) => {
-          setAiEval(prev => {
-            const lastMessage = prev.chatHistory[prev.chatHistory.length - 1];
-            if (lastMessage && lastMessage.role === 'ai') {
-              const newHistory = [...prev.chatHistory];
-              newHistory[newHistory.length - 1] = {
-                ...lastMessage,
-                content: lastMessage.content + chunk
-              };
-              return { ...prev, chatHistory: newHistory };
-            }
-            return prev;
-          });
-        }, 
         i18n.language,
         aiEval.suggestion
       );
 
-      setAiEval(prev => {
-        const newHistory = [...prev.chatHistory];
-        newHistory[newHistory.length - 1].content = firstQuestion;
-        return { ...prev, chatHistory: newHistory };
-      });
+      setAiEval(prev => ({
+        ...prev,
+        chatHistory: [...prev.chatHistory, { role: 'ai', content: response.content }]
+      }));
     } catch (error) {
       console.error('Failed to start chat analysis', error);
     } finally {
@@ -138,10 +122,9 @@ const RationalWizard: React.FC<RationalWizardProps> = ({ behavior, onClose, onUp
     const userMessage: AiChatEntry = { role: 'user', content: userInput };
     const updatedHistory = [...aiEval.chatHistory, userMessage];
     
-    // 添加用户消息，并预置一个空的 AI 消息准备流式接收
     setAiEval(prev => ({ 
       ...prev, 
-      chatHistory: [...updatedHistory, { role: 'ai', content: '' }] 
+      chatHistory: updatedHistory 
     }));
     setUserInput('');
     setIsLoading(true);
@@ -150,39 +133,21 @@ const RationalWizard: React.FC<RationalWizardProps> = ({ behavior, onClose, onUp
       const questionCount = updatedHistory.filter(m => m.role === 'ai').length;
       
       if (questionCount < MAX_QUESTIONS) {
-        const nextQuestion = await getNextQuestion(
+        const response = await api.getNextQuestion(
           behavior.text, 
           vision, 
           updatedHistory, 
-          (chunk) => {
-            setAiEval(prev => {
-              const lastMessage = prev.chatHistory[prev.chatHistory.length - 1];
-              if (lastMessage && lastMessage.role === 'ai') {
-                const newHistory = [...prev.chatHistory];
-                newHistory[newHistory.length - 1] = {
-                  ...lastMessage,
-                  content: lastMessage.content + chunk
-                };
-                return { ...prev, chatHistory: newHistory };
-              }
-              return prev;
-            });
-          }, 
           i18n.language,
           aiEval.suggestion
         );
         
-        setAiEval(prev => {
-          const newHistory = [...prev.chatHistory];
-          newHistory[newHistory.length - 1].content = nextQuestion;
-          return { ...prev, chatHistory: newHistory };
-        });
+        setAiEval(prev => ({
+          ...prev,
+          chatHistory: [...prev.chatHistory, { role: 'ai', content: response.content }]
+        }));
       } else {
         setStep('summary');
-        const { summary, score } = await getFinalEvaluation(behavior.text, vision, updatedHistory, () => {
-          // 总结阶段也可以流式显示，但因为是 JSON，建议只流式显示 summary 字段
-          // 这里为了简单，先保持 summary 整体更新，只在最终拿到结果后显示
-        }, i18n.language);
+        const { summary, score } = await api.getFinalEvaluation(behavior.text, vision, updatedHistory, i18n.language);
         setAiEval(prev => ({
           ...prev,
           finalSummary: summary,

@@ -1,4 +1,9 @@
 {
+  "common": {
+    "confirm": "确定",
+    "cancel": "取消",
+    "untitled": "未命名愿望"
+  },
   "sidebar": {
     "title": "TinyLeap",
     "mode": "绘图桌模式",
@@ -33,6 +38,15 @@
     "noBehaviorsForSOP": "没有找到处于“黄金行为”或“核心挑战”区域的行为。请先评估或移动行为到上方区域。",
     "clear": "清除数据",
     "clearConfirm": "确定要清空画布吗？此操作不可撤销。"
+  },
+  "bookshelf": {
+    "title": "我的愿望清单",
+    "subtitle": "每一个微小的跨越，都始于一个清晰的愿望",
+    "count": "个愿望",
+    "addNew": "开启新愿望",
+    "addTitle": "你想实现什么愿望？",
+    "enter": "进入工作坊",
+    "back": "返回愿望清单"
   },
   "canvas": {
     "impact": "影响力 (IMPACT)",

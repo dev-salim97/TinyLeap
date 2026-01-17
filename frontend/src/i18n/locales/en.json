@@ -1,4 +1,9 @@
 {
+  "common": {
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "untitled": "Untitled Vision"
+  },
   "sidebar": {
     "title": "TinyLeap",
     "mode": "Drafting Table Mode",
@@ -33,6 +38,15 @@
     "noBehaviorsForSOP": "No behaviors found in 'Golden' or 'Challenge' areas. Please evaluate or move behaviors to the top area first.",
     "clear": "Clear Data",
     "clearConfirm": "Are you sure you want to clear the canvas? This action cannot be undone."
+  },
+  "bookshelf": {
+    "title": "My Vision Bookshelf",
+    "subtitle": "Every tiny leap starts with a clear vision",
+    "count": "visions",
+    "addNew": "Start New Vision",
+    "addTitle": "What do you want to achieve?",
+    "enter": "Enter Workshop",
+    "back": "Back to Bookshelf"
   },
   "canvas": {
     "impact": "IMPACT",

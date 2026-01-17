@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { model } from '../llm';
+import { model } from '../llm.js';
 import { ChatPromptTemplate } from '@langchain/core/prompts';
 
 /**
@@ -65,7 +65,7 @@ ${excludeInfo}
       vision: vision
     });
 
-    return result.behaviors;
+    return (result as any).behaviors;
   } catch (error) {
     console.error("LangChain: Failed to generate behaviors", error);
     // 返回空数组，由 UI 处理空状态

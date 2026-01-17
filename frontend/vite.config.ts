@@ -11,10 +11,9 @@ export default defineConfig({
   ],
   server: {
     proxy: {
-      '/api-llm': {
-        target: 'https://api.xiaomimimo.com',
+      '/api': {
+        target: 'http://localhost:5000',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api-llm/, ''),
       },
     },
   },

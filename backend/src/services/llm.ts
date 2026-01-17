@@ -1,16 +1,21 @@
 import { ChatOpenAI } from '@langchain/openai';
+import dotenv from 'dotenv';
 
-const API_KEY = import.meta.env.VITE_LLM_API_KEY || '';
-const BASE_URL = (import.meta.env.VITE_LLM_BASE_URL || 'https://api.openai.com/v1').replace(/\/$/, '');
-const MODEL_NAME = import.meta.env.VITE_LLM_MODEL || 'gpt-3.5-turbo';
+dotenv.config();
 
-// 获取当前的基础路径，用于开发环境代理
+const API_KEY = process.env.LLM_API_KEY || '';
+const ENV_BASE_URL = process.env.LLM_BASE_URL;
+const MODEL_NAME = process.env.LLM_MODEL || 'gpt-3.5-turbo';
+
+// 获取当前的基础路径
 const getBaseUrl = () => {
-  if (import.meta.env.DEV) {
-    // 强制指向标准的 v1 路径，配合 Vite Proxy
-    return window.location.origin + '/api-llm/v1';
+  // 1. 优先使用显式设置的环境变量
+  if (ENV_BASE_URL && ENV_BASE_URL.trim() !== '') {
+    return ENV_BASE_URL.replace(/\/$/, '');
   }
-  return BASE_URL;
+
+  // 2. 兜底方案
+  return 'https://api.openai.com/v1';
 };
 
 // 创建 LangChain ChatOpenAI 实例
