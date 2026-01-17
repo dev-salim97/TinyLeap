@@ -25,9 +25,12 @@ const App: React.FC = () => {
   // Load workshop when vision changes
   useEffect(() => {
     if (!currentVisionId) {
-      setState({ behaviors: [] });
+      setState({ behaviors: [], vision: '', sopData: undefined });
       return;
     }
+
+    // Clear state before loading new vision
+    setState({ behaviors: [], vision: '', sopData: undefined });
 
     const loadWorkshop = async () => {
       try {

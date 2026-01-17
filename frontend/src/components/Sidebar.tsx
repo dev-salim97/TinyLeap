@@ -84,6 +84,8 @@ const Sidebar: React.FC<SidebarProps> = ({
     }
   };
 
+  const hasSOP = existingSOP && existingSOP.sections && existingSOP.sections.length > 0;
+
   return (
     <>
       {/* Mobile Overlay */}
@@ -211,7 +213,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       <div className="mt-auto pt-8 border-t border-black/5 space-y-4">
-        {existingSOP ? (
+        {hasSOP ? (
           <div className="flex flex-col gap-2">
             <button
               onClick={onViewSOP}
