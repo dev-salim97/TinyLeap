@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Trash2, BookOpen, Clock } from 'lucide-react';
+import { Plus, Trash2, BookOpen, Clock, Settings } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { api } from '../services/api';
 import { COLOR_KEYS, MORANDI_COLORS } from '../constants';
@@ -13,9 +13,10 @@ interface Vision {
 
 interface VisionBookshelfProps {
   onSelectVision: (id: string) => void;
+  onChangePassword: () => void;
 }
 
-const VisionBookshelf: React.FC<VisionBookshelfProps> = ({ onSelectVision }) => {
+const VisionBookshelf: React.FC<VisionBookshelfProps> = ({ onSelectVision, onChangePassword }) => {
   const { t } = useTranslation();
   const [visions, setVisions] = useState<Vision[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -82,8 +83,18 @@ const VisionBookshelf: React.FC<VisionBookshelfProps> = ({ onSelectVision }) => 
               {t('bookshelf.subtitle') || '每一个微小的跨越，都始于一个清晰的愿望'}
             </p>
           </div>
-          <div className="text-slate-400 text-sm">
-            {visions.length} {t('bookshelf.count') || '个愿望'}
+          <div className="flex items-center gap-6">
+            <button
+              onClick={onChangePassword}
+              className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-all flex items-center gap-2 text-sm font-medium"
+              title={t('auth.changeTitle')}
+            >
+              <Settings className="w-5 h-5" />
+              <span className="hidden md:inline">{t('auth.changeTitle')}</span>
+            </button>
+            <div className="text-slate-400 text-sm">
+              {visions.length} {t('bookshelf.count') || '个愿望'}
+            </div>
           </div>
         </header>
 

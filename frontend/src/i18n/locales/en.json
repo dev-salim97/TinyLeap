@@ -98,7 +98,8 @@
   },
   "note": {
     "evaluate": "Evaluate",
-    "delete": "Delete"
+    "delete": "Delete",
+    "edit": "Edit"
   },
   "sop": {
     "subtitle": "Standard Operating Procedure",
@@ -110,5 +111,22 @@
     "motivationHack": "Motivation Hack",
     "print": "Export PDF",
     "close": "Got it"
+  },
+  "auth": {
+    "title": "Password Verification",
+    "setTitle": "Set Access Password",
+    "changeTitle": "Change Password",
+    "passwordPlaceholder": "Enter password",
+    "oldPasswordPlaceholder": "Enter old password",
+    "newPasswordPlaceholder": "Enter new password",
+    "confirmPasswordPlaceholder": "Confirm new password",
+    "setButton": "Set Password",
+    "verifyButton": "Verify",
+    "changeButton": "Change Password",
+    "wrongPassword": "Wrong password, please try again",
+    "passwordMismatch": "Passwords do not match",
+    "setupSuccess": "Password set successfully",
+    "changeSuccess": "Password changed successfully",
+    "firstTimeDesc": "First time? Please set an access password to protect your vision list."
   }
 }

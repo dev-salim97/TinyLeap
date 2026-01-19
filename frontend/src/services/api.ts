@@ -80,5 +80,28 @@ export const api = {
       body: JSON.stringify({ vision, behaviors, language }),
     });
     return response.json();
+  },
+
+  async getAuthStatus(): Promise<{ isSet: boolean }> {
+    const response = await fetch(`${API_BASE_URL}/auth/status`);
+    return response.json();
+  },
+
+  async verifyPassword(password: string): Promise<{ success: boolean; message?: string }> {
+    const response = await fetch(`${API_BASE_URL}/auth/verify`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password }),
+    });
+    return response.json();
+  },
+
+  async setPassword(password: string, oldPassword?: string): Promise<{ success: boolean; message?: string }> {
+    const response = await fetch(`${API_BASE_URL}/auth/set`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password, oldPassword }),
+    });
+    return response.json();
   }
 };

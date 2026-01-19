@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { AnimatePresence } from 'framer-motion';
 
 import VisionBookshelf from './components/VisionBookshelf';
+import PasswordModal from './components/PasswordModal';
 
 const App: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -21,6 +22,28 @@ const App: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [showSOP, setShowSOP] = useState(false);
   const [isGeneratingSOP, setIsGeneratingSOP] = useState(false);
+
+  // Auth state
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authMode, setAuthMode] = useState<'verify' | 'set' | null>(null);
+  const [showChangePassword, setShowChangePassword] = useState(false);
+
+  // Check auth status
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const { isSet } = await api.getAuthStatus();
+        if (!isSet) {
+          setAuthMode('set');
+        } else {
+          setAuthMode('verify');
+        }
+      } catch (e) {
+        console.error('Failed to check auth status', e);
+      }
+    };
+    checkAuth();
+  }, []);
 
   // Load workshop when vision changes
   useEffect(() => {
@@ -230,8 +253,34 @@ const App: React.FC = () => {
 
   const behaviorToEvaluate = state.behaviors.find(b => b.id === evaluatingId);
 
+  if (!isAuthenticated && authMode) {
+    return (
+      <PasswordModal 
+        mode={authMode} 
+        onSuccess={() => {
+          setIsAuthenticated(true);
+          setAuthMode(null);
+        }} 
+      />
+    );
+  }
+
   if (!currentVisionId) {
-    return <VisionBookshelf onSelectVision={setCurrentVisionId} />;
+    return (
+      <>
+        <VisionBookshelf 
+          onSelectVision={setCurrentVisionId} 
+          onChangePassword={() => setShowChangePassword(true)}
+        />
+        {showChangePassword && (
+          <PasswordModal 
+            mode="change" 
+            onSuccess={() => setShowChangePassword(false)} 
+            onCancel={() => setShowChangePassword(false)}
+          />
+        )}
+      </>
+    );
   }
 
   return (
